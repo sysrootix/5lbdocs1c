@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5lb API — Документация для разработчиков</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF6B00;
+            --orange-light: #FF8C33;
+            --orange-dark: #CC5500;
+            --orange-glow: rgba(255, 107, 0, 0.15);
+            --orange-border: rgba(255, 107, 0, 0.3);
+            --bg: #0D0D0D;
+            --bg2: #141414;
+            --bg3: #1A1A1A;
+            --bg4: #222222;
+            --text: #F0F0F0;
+            --text-muted: #888;
+            --text-dim: #555;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #60a5fa;
+            --purple: #a78bfa;
+            --radius: 10px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        code,
+        pre,
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--bg2);
+            border-right: 1px solid #222;
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 48px 56px;
+            max-width: 900px;
+        }
+
+        /* Sidebar */
+        .sidebar-logo {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid #222;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .sidebar-logo .logo-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-section {
+            padding: 6px 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            margin-top: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.15s;
+            border-left: 2px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text);
+            background: var(--orange-glow);
+            border-left-color: var(--orange);
+        }
+
+        .nav-item .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .badge-get {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--green);
+        }
+
+        .badge-post {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--orange);
+        }
+
+        /* Main content */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            color: var(--orange);
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222;
+            scroll-margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 28px 0 12px;
+        }
+
+        p {
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+
+        a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 28px;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--bg2) 0%, #1a0d00 100%);
+            border: 1px solid var(--orange-border);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 36px;
+        }
+
+        .hero .base-url {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg3);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 8px 16px;
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .hero .base-url .label {
+            color: var(--text-dim);
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        /* Endpoint card */
+        .endpoint-card {
+            background: var(--bg2);
+            border: 1px solid #252525;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--orange-border);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .method {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .method-get {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .method-post {
+            background: rgba(255, 107, 0, 0.1);
+            color: var(--orange);
+            border: 1px solid rgba(255, 107, 0, 0.25);
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .endpoint-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .endpoint-body {
+            padding: 0 20px 20px;
+            border-top: 1px solid #1e1e1e;
+        }
+
+        /* Auth block */
+        .auth-block {
+            background: linear-gradient(90deg, rgba(255, 107, 0, 0.05) 0%, transparent 100%);
+            border: 1px solid var(--orange-border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .auth-block .auth-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .auth-example {
+            background: var(--bg3);
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+
+        thead tr {
+            background: var(--bg3);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        td {
+            padding: 10px 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #1e1e1e;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .req {
+            color: var(--orange);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .td-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--blue);
+        }
+
+        .td-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--purple);
+        }
+
+        /* Code block */
+        .code-block {
+            background: #111;
+            border: 1px solid #252525;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .code-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: #181818;
+            border-bottom: 1px solid #222;
+        }
+
+        .code-lang {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .copy-btn {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .copy-btn:hover {
+            background: var(--orange);
+            color: #fff;
+            border-color: var(--orange);
+        }
+
+        .copy-btn.copied {
+            background: var(--green);
+            color: #fff;
+            border-color: var(--green);
+        }
+
+        pre {
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .hl-key {
+            color: #f8c176;
+        }
+
+        .hl-str {
+            color: #98d982;
+        }
+
+        .hl-num {
+            color: #d19a66;
+        }
+
+        .hl-null {
+            color: var(--text-muted);
+        }
+
+        .hl-comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .hl-kw {
+            color: var(--orange-light);
+        }
+
+        .hl-fn {
+            color: var(--blue);
+        }
+
+        .hl-var {
+            color: var(--purple);
+        }
+
+        /* Response blocks */
+        .response-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .resp-tab {
+            padding: 6px 14px;
+            border-radius: 6px 6px 0 0;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #252525;
+            border-bottom: none;
+            background: var(--bg3);
+            color: var(--text-muted);
+        }
+
+        .resp-tab.ok {
+            color: var(--green);
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .resp-tab.err {
+            color: var(--red);
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Status codes */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg3);
+            border: 1px solid #252525;
+            border-radius: 6px;
+            padding: 8px 14px;
+        }
+
+        .status-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            min-width: 36px;
+        }
+
+        .s200 {
+            color: var(--green);
+        }
+
+        .s400 {
+            color: #f59e0b;
+        }
+
+        .s401 {
+            color: var(--red);
+        }
+
+        .s500 {
+            color: var(--red);
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        /* Alert */
+        .alert {
+            display: flex;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        .alert-warn {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .alert-info {
+            background: rgba(96, 165, 250, 0.08);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+
+        .alert-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Tag chips */
+        .chip {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .chip-orange {
+            background: var(--orange-glow);
+            color: var(--orange);
+            border: 1px solid var(--orange-border);
+        }
+
+        .chip-green {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .chip-blue {
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--blue);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+
+        /* Image URL section */
+        .image-formula {
+            background: var(--bg3);
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            margin: 12px 0;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #1e1e1e;
+            margin: 40px 0;
+        }
+
+        /* Quick ref */
+        .quick-ref {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .quick-item {
+            background: var(--bg2);
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: border-color 0.2s;
+        }
+
+        .quick-item:hover {
+            border-color: var(--orange-border);
+        }
+
+        .quick-item .q-method {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .quick-item .q-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .quick-item .q-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                padding: 24px 20px;
+            }
+
+            .quick-ref {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-text">5lb.pro</div>
+                <div class="logo-sub">API Documentation</div>
+            </div>
+
+            <div class="nav-section">Введение</div>
+            <a href="#intro" class="nav-item">Обзор API</a>
+            <a href="#auth" class="nav-item">Авторизация</a>
+
+            <div class="nav-section">1С Интеграция</div>
+            <a href="#sync" class="nav-item">
+                Синхронизация товара
+                <span class="badge badge-post">POST</span>
+            </a>
+            <a href="#example-1c" class="nav-item">Пример на 1С</a>
+
+            <div class="nav-section">Публичный API</div>
+            <a href="#get-catalog" class="nav-item">
+                Каталог (список)
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-sections" class="nav-item">
+                Категории
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-brands" class="nav-item">
+                Бренды
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-countries" class="nav-item">
+                Страны
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-flavors" class="nav-item">
+                Вкусы
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-stats" class="nav-item">
+                Статистика
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-by-article" class="nav-item">
+                По артикулу
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#get-by-id" class="nav-item">
+                По ID
+                <span class="badge badge-get">GET</span>
+            </a>
+            <a href="#images" class="nav-item">Изображения</a>
+            <a href="#errors" class="nav-item">Коды ошибок</a>
+        </nav>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- INTRO -->
+            <section id="intro">
+                <h1>5lb <span>API</span></h1>
+                <div class="subtitle">Документация для разработчиков · Версия 1.0</div>
+
+                <div class="hero">
+                    <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">Базовый URL всех запросов
+                    </div>
+                    <div class="base-url">
+                        <span class="dot"></span>
+                        <span class="label">Base URL</span>
+                        <span style="color:var(--text)">https://app.5lb.pro</span>
+                    </div>
+                    <p style="margin-top:16px;font-size:14px;color:#aaa;">
+                        API работает по протоколу HTTPS. Данные возвращаются в формате <strong>JSON</strong>.<br>
+                        Кодировка: <strong>UTF-8</strong>. Все строки с датами — формат <strong>ISO 8601</strong>.
+                    </p>
+                </div>
+
+                <h3>Быстрый старт</h3>
+                <div class="quick-ref">
+                    <div class="quick-item">
+                        <div class="q-method" style="color:var(--orange)">POST</div>
+                        <div class="q-path">/api/catalog-5lb/sync</div>
+                        <div class="q-desc">Создание / обновление товара из 1С</div>
+                    </div>
+                    <div class="quick-item">
+                        <div class="q-method" style="color:var(--green)">GET</div>
+                        <div class="q-path">/api/catalog-5lb</div>
+                        <div class="q-desc">Список всех товаров с пагинацией</div>
+                    </div>
+                    <div class="quick-item">
+                        <div class="q-method" style="color:var(--green)">GET</div>
+                        <div class="q-path">/api/catalog-5lb/by-article/:id</div>
+                        <div class="q-desc">Товар по артикулу 1С</div>
+                    </div>
+                    <div class="quick-item">
+                        <div class="q-method" style="color:var(--green)">GET</div>
+                        <div class="q-path">/api/catalog-5lb/stats</div>
+                        <div class="q-desc">Статистика каталога</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AUTH -->
+            <section id="auth">
+                <h2>🔐 Авторизация</h2>
+
+                <div class="auth-block">
+                    <div class="auth-title">
+                        <span>🔑</span> Bearer Token
+                    </div>
+                    <p style="font-size:14px;margin-bottom:0;">
+                        Эндпоинт синхронизации защищён токеном. Токен необходимо передавать в заголовке каждого запроса:
+                    </p>
+                    <div class="auth-example">
+                        <span><span style="color:var(--text-muted)">Authorization:</span> Bearer <span
+                                style="color:var(--orange)">YOUR_SECRET_TOKEN</span></span>
+                    </div>
+                </div>
+
+                <div class="alert alert-warn">
+                    <span class="alert-icon">⚠️</span>
+                    <div>Токен выдаётся администратором 5lb. Не передавайте токен третьим лицам и не включайте его в
+                        публичный код. Без токена сервер возвращает <code
+                            style="color:var(--red)">401 Unauthorized</code>.</div>
+                </div>
+
+                <p style="font-size:14px;color:#aaa;">
+                    Публичные GET-эндпоинты (список товаров, категории, бренды и т.д.) не требуют авторизации.
+                </p>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- SYNC ENDPOINT -->
+            <section id="sync">
+                <h2>📦 Синхронизация товара из 1С</h2>
+                <p>Главный эндпоинт для интеграции. При вызове товар <strong>создаётся</strong>, если его нет в базе,
+                    или <strong>обновляется</strong>, если уже существует — поиск ведётся по полю <code
+                        class="chip chip-orange">articleMain</code>.</p>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-path">/api/catalog-5lb/sync</span>
+                        <span class="endpoint-desc">Upsert товара по артикулу</span>
+                    </div>
+                    <div class="endpoint-body">
+
+                        <h3>Заголовки запроса</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Заголовок</th>
+                                    <th>Значение</th>
+                                    <th>Обязательный</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-mono">Authorization</td>
+                                    <td><code>Bearer YOUR_TOKEN</code></td>
+                                    <td><span class="req">ДА</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">Content-Type</td>
+                                    <td><code>application/json</code></td>
+                                    <td><span class="req">ДА</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Тело запроса (JSON)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Поле</th>
+                                    <th>Тип</th>
+                                    <th>Обязательное</th>
+                                    <th>Описание</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-mono">articleMain</td>
+                                    <td class="td-type">string</td>
+                                    <td><span class="req">ДА</span></td>
+                                    <td>Основной артикул — ключ для поиска в базе</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">productName</td>
+                                    <td class="td-type">string</td>
+                                    <td><span class="req">ДА</span></td>
+                                    <td>Название товара</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">articleAdditional</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Дополнительный артикул (вариация)</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">brand</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Бренд</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section1</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Категория 1 уровня</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section2</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Категория 2 уровня</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section3</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Категория 3 уровня</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section4</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Категория 4 уровня</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">flavor</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Вкус</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">color</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Цвет</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">weightVolume</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Вес / объём: "900 г", "1 л"</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">servings</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Количество порций</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">quantityInPack</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Кол-во в упаковке</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">country</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Страна производителя</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">releaseForm</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>"Порошок", "Капсулы", "Таблетки"…</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">description</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Описание товара</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">howToUse</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Способ применения</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">ingredients</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Состав / ингредиенты</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">compositionPerServing</td>
+                                    <td class="td-type">string|null</td>
+                                    <td style="color:var(--text-dim)">нет</td>
+                                    <td>Состав на порцию (КБЖУ)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="alert alert-info">
+                            <span class="alert-icon">ℹ️</span>
+                            <div>Поле <code>imageUrl</code> не передаётся — фотографии загружаются отдельно через CRM
+                                5lb. Необязательные поля можно опускать или передавать как <code>null</code>.</div>
+                        </div>
+
+                        <h3>Пример тела запроса</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span class="code-lang">JSON</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+                            </div>
+                            <pre>{
+  <span class="hl-key">"articleMain"</span>: <span class="hl-str">"1010002"</span>,
+  <span class="hl-key">"articleAdditional"</span>: <span class="hl-str">"CLYLW-VOL700"</span>,
+  <span class="hl-key">"productName"</span>: <span class="hl-str">"Whey Gold Standard"</span>,
+  <span class="hl-key">"brand"</span>: <span class="hl-str">"Optimum Nutrition"</span>,
+  <span class="hl-key">"section1"</span>: <span class="hl-str">"Спортивное питание"</span>,
+  <span class="hl-key">"section2"</span>: <span class="hl-str">"Протеин"</span>,
+  <span class="hl-key">"section3"</span>: <span class="hl-null">null</span>,
+  <span class="hl-key">"section4"</span>: <span class="hl-null">null</span>,
+  <span class="hl-key">"flavor"</span>: <span class="hl-str">"Шоколад"</span>,
+  <span class="hl-key">"country"</span>: <span class="hl-str">"США"</span>,
+  <span class="hl-key">"weightVolume"</span>: <span class="hl-str">"2.27 кг"</span>,
+  <span class="hl-key">"servings"</span>: <span class="hl-str">"74"</span>,
+  <span class="hl-key">"releaseForm"</span>: <span class="hl-str">"Порошок"</span>
+}</pre>
+                        </div>
+
+                        <h3>Ответ при успехе — <span style="color:var(--green)">200 OK</span></h3>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span class="code-lang">JSON</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+                            </div>
+                            <pre>{
+  <span class="hl-key">"ok"</span>: <span class="hl-null">true</span>,
+  <span class="hl-key">"action"</span>: <span class="hl-str">"updated"</span>,  <span class="hl-comment">// "created" или "updated"</span>
+  <span class="hl-key">"item"</span>: {
+    <span class="hl-key">"id"</span>: <span class="hl-str">"abc123"</span>,
+    <span class="hl-key">"articleMain"</span>: <span class="hl-str">"1010002"</span>,
+    <span class="hl-key">"productName"</span>: <span class="hl-str">"Whey Gold Standard"</span>,
+    <span class="hl-key">"imageUrl"</span>: <span class="hl-str">"https://app.5lb.pro/images/catalog/1010002-CLYLW-VOL700.png"</span>,
+    <span class="hl-comment">// ... остальные поля товара</span>
+  }
+}</pre>
+                        </div>
+
+                        <h3>Коды ответа</h3>
+                        <div class="status-list">
+                            <div class="status-item"><span class="status-code s200">200</span><span
+                                    class="status-text">Товар успешно создан или обновлён</span></div>
+                            <div class="status-item"><span class="status-code s400">400</span><span
+                                    class="status-text">Отсутствует обязательное поле (<code>articleMain</code> или
+                                    <code>productName</code>)</span></div>
+                            <div class="status-item"><span class="status-code s401">401</span><span
+                                    class="status-text">Токен отсутствует, неверный или истёк</span></div>
+                            <div class="status-item"><span class="status-code s500">500</span><span
+                                    class="status-text">Внутренняя ошибка сервера</span></div>
+                        </div>
+
+                        <h3>Ответ при ошибке</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span class="code-lang">JSON</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+                            </div>
+                            <pre>{
+  <span class="hl-key">"ok"</span>: <span class="hl-null">false</span>,
+  <span class="hl-key">"error"</span>: <span class="hl-str">"Описание ошибки"</span>
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1C EXAMPLE -->
+            <section id="example-1c">
+                <h2>🖥️ Пример интеграции на языке 1С</h2>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-lang">1C (BSL)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+                    </div>
+                    <pre><span class="hl-comment">// Соединение с сервером</span>
+<span class="hl-var">Соединение</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">HTTPСоединение</span>(
+    <span class="hl-str">"app.5lb.pro"</span>, <span class="hl-num">443</span>,
+    , , ,
+    <span class="hl-num">30</span>,
+    <span class="hl-kw">Новый</span> <span class="hl-fn">ЗащищенноеСоединениеOpenSSL</span>()
+);
+
+<span class="hl-comment">// Заголовки</span>
+<span class="hl-var">Заголовки</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">Соответствие</span>;
+<span class="hl-var">Заголовки</span>[<span class="hl-str">"Content-Type"</span>]  = <span class="hl-str">"application/json"</span>;
+<span class="hl-var">Заголовки</span>[<span class="hl-str">"Authorization"</span>] = <span class="hl-str">"Bearer ВСТАВЬТЕ_ВАШ_ТОКЕН"</span>;
+
+<span class="hl-comment">// Данные товара</span>
+<span class="hl-var">Данные</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">Структура</span>;
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"articleMain"</span>,  Товар.Артикул);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"productName"</span>,  Товар.Наименование);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"brand"</span>,        Товар.Бренд);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"section1"</span>,     Товар.Раздел1);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"section2"</span>,     Товар.Раздел2);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"country"</span>,      Товар.СтранаПроисхождения);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"weightVolume"</span>, Товар.Вес);
+<span class="hl-var">Данные</span>.<span class="hl-fn">Вставить</span>(<span class="hl-str">"flavor"</span>,       Товар.Вкус);
+
+<span class="hl-comment">// Сериализация в JSON</span>
+<span class="hl-var">ЗаписьJSON</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">ЗаписьJSON</span>;
+<span class="hl-var">ЗаписьJSON</span>.<span class="hl-fn">УстановитьСтроку</span>();
+<span class="hl-fn">ЗаписатьJSON</span>(<span class="hl-var">ЗаписьJSON</span>, <span class="hl-var">Данные</span>);
+<span class="hl-var">ТелоJSON</span> = <span class="hl-var">ЗаписьJSON</span>.<span class="hl-fn">Закрыть</span>();
+
+<span class="hl-comment">// Отправка запроса</span>
+<span class="hl-var">Запрос</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">HTTPЗапрос</span>(<span class="hl-str">"/api/catalog-5lb/sync"</span>, <span class="hl-var">Заголовки</span>);
+<span class="hl-var">Запрос</span>.<span class="hl-fn">УстановитьТелоИзСтроки</span>(<span class="hl-var">ТелоJSON</span>, <span class="hl-fn">КодировкаТекста</span>.UTF8);
+<span class="hl-var">Ответ</span> = <span class="hl-var">Соединение</span>.<span class="hl-fn">ВызватьHTTPМетод</span>(<span class="hl-str">"POST"</span>, <span class="hl-var">Запрос</span>);
+
+<span class="hl-comment">// Обработка ответа</span>
+<span class="hl-kw">Если</span> <span class="hl-var">Ответ</span>.КодСостояния = <span class="hl-num">200</span> <span class="hl-kw">Тогда</span>
+    <span class="hl-var">ЧтениеJSON</span> = <span class="hl-kw">Новый</span> <span class="hl-fn">ЧтениеJSON</span>;
+    <span class="hl-var">ЧтениеJSON</span>.<span class="hl-fn">УстановитьСтроку</span>(<span class="hl-var">Ответ</span>.<span class="hl-fn">ПолучитьТелоКакСтроку</span>());
+    <span class="hl-var">Результат</span> = <span class="hl-fn">ПрочитатьJSON</span>(<span class="hl-var">ЧтениеJSON</span>);
+    <span class="hl-comment">// Результат.action = "created" или "updated"</span>
+    <span class="hl-fn">Сообщить</span>(<span class="hl-str">"Товар "</span> + <span class="hl-var">Результат</span>.action);
+<span class="hl-kw">Иначе</span>
+    <span class="hl-fn">Сообщить</span>(<span class="hl-str">"Ошибка: "</span> + <span class="hl-var">Ответ</span>.КодСостояния);
+<span class="hl-kw">КонецЕсли</span>;</pre>
+                </div>
+
+                <div class="alert alert-warn">
+                    <span class="alert-icon">⚠️</span>
+                    <div>Если возникает ошибка <strong>"Узел не прошёл проверку"</strong> (SSL) — убедитесь, что
+                        используется <code>ЗащищенноеСоединениеOpenSSL()</code> с актуальными корневыми сертификатами
+                        Let's Encrypt.</div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- PUBLIC API -->
+            <section id="get-catalog">
+                <h2>📋 Публичный API каталога</h2>
+
+                <div class="endpoint-card" id="get-catalog">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb</span>
+                        <span class="endpoint-desc">Список товаров с пагинацией и фильтрами</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <h3>Параметры запроса</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Параметр</th>
+                                    <th>Тип</th>
+                                    <th>По умолчанию</th>
+                                    <th>Описание</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-mono">page</td>
+                                    <td class="td-type">number</td>
+                                    <td>1</td>
+                                    <td>Номер страницы</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">limit</td>
+                                    <td class="td-type">number</td>
+                                    <td>20 (макс. 100)</td>
+                                    <td>Товаров на странице</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">search</td>
+                                    <td class="td-type">string</td>
+                                    <td>—</td>
+                                    <td>Поиск по названию, бренду, артикулу</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section1</td>
+                                    <td class="td-type">string</td>
+                                    <td>—</td>
+                                    <td>Фильтр по категории 1</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">section2</td>
+                                    <td class="td-type">string</td>
+                                    <td>—</td>
+                                    <td>Фильтр по категории 2</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">brand</td>
+                                    <td class="td-type">string</td>
+                                    <td>—</td>
+                                    <td>Фильтр по бренду</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">country</td>
+                                    <td class="td-type">string</td>
+                                    <td>—</td>
+                                    <td>Фильтр по стране</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">Пример</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Копировать</button></div>
+                            <pre>GET /api/catalog-5lb?page=1&limit=20&search=протеин&brand=Optimum+Nutrition</pre>
+                        </div>
+                        <h3>Структура ответа</h3>
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">JSON</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Копировать</button></div>
+                            <pre>{
+  <span class="hl-key">"items"</span>: [
+    {
+      <span class="hl-key">"id"</span>: <span class="hl-str">"abc123"</span>,
+      <span class="hl-key">"productName"</span>: <span class="hl-str">"Whey Gold Standard"</span>,
+      <span class="hl-key">"brand"</span>: <span class="hl-str">"Optimum Nutrition"</span>,
+      <span class="hl-key">"section1"</span>: <span class="hl-str">"Спортивное питание"</span>,
+      <span class="hl-key">"section2"</span>: <span class="hl-str">"Протеин"</span>,
+      <span class="hl-key">"articleMain"</span>: <span class="hl-str">"1010002"</span>,
+      <span class="hl-key">"articleAdditional"</span>: <span class="hl-str">"CLYLW-VOL700"</span>,
+      <span class="hl-key">"imageUrl"</span>: <span class="hl-str">"https://app.5lb.pro/images/catalog/1010002-CLYLW-VOL700.png"</span>,
+      <span class="hl-key">"weightVolume"</span>: <span class="hl-str">"2.27 кг"</span>,
+      <span class="hl-key">"flavor"</span>: <span class="hl-str">"Шоколад"</span>,
+      <span class="hl-key">"country"</span>: <span class="hl-str">"США"</span>
+    }
+  ],
+  <span class="hl-key">"pagination"</span>: {
+    <span class="hl-key">"page"</span>: <span class="hl-num">1</span>,
+    <span class="hl-key">"limit"</span>: <span class="hl-num">20</span>,
+    <span class="hl-key">"total"</span>: <span class="hl-num">150</span>,
+    <span class="hl-key">"totalPages"</span>: <span class="hl-num">8</span>
+  }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sections -->
+                <div class="endpoint-card" id="get-sections">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/sections</span>
+                        <span class="endpoint-desc">Уникальные категории (section1–section4)</span>
+                    </div>
+                </div>
+
+                <!-- Brands -->
+                <div class="endpoint-card" id="get-brands">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/brands</span>
+                        <span class="endpoint-desc">Все уникальные бренды</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">JSON</span></div>
+                            <pre>{ <span class="hl-key">"brands"</span>: [<span class="hl-str">"Optimum Nutrition"</span>, <span class="hl-str">"BSN"</span>, <span class="hl-str">"Dymatize"</span>, ...] }</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Countries -->
+                <div class="endpoint-card" id="get-countries">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/countries</span>
+                        <span class="endpoint-desc">Все уникальные страны-производители</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">JSON</span></div>
+                            <pre>{ <span class="hl-key">"countries"</span>: [<span class="hl-str">"США"</span>, <span class="hl-str">"Россия"</span>, <span class="hl-str">"Германия"</span>, ...] }</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flavors -->
+                <div class="endpoint-card" id="get-flavors">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/flavors</span>
+                        <span class="endpoint-desc">Все уникальные вкусы</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">JSON</span></div>
+                            <pre>{ <span class="hl-key">"flavors"</span>: [<span class="hl-str">"Шоколад"</span>, <span class="hl-str">"Ваниль"</span>, <span class="hl-str">"Клубника"</span>, ...] }</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="endpoint-card" id="get-stats">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/stats</span>
+                        <span class="endpoint-desc">Статистика каталога</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">JSON</span></div>
+                            <pre>{
+  <span class="hl-key">"totalProducts"</span>: <span class="hl-num">150</span>,
+  <span class="hl-key">"totalBrands"</span>: <span class="hl-num">25</span>,
+  <span class="hl-key">"totalCountries"</span>: <span class="hl-num">8</span>,
+  <span class="hl-key">"totalCategories"</span>: <span class="hl-num">12</span>
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- By article -->
+                <div class="endpoint-card" id="get-by-article">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/by-article/:articleMain</span>
+                        <span class="endpoint-desc">Товар по артикулу 1С</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="code-block">
+                            <div class="code-block-header"><span class="code-lang">Пример</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Копировать</button></div>
+                            <pre>GET /api/catalog-5lb/by-article/1010002</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- By ID -->
+                <div class="endpoint-card" id="get-by-id">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-path">/api/catalog-5lb/:id</span>
+                        <span class="endpoint-desc">Полная информация о товаре по внутреннему ID</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IMAGES -->
+            <section id="images">
+                <h2>🖼️ Изображения товаров</h2>
+                <p>Изображения хранятся на сервере и доступны публично без авторизации.</p>
+
+                <h3>Формат URL</h3>
+                <div class="image-formula">
+                    <div style="color:var(--text-muted);font-size:12px;margin-bottom:8px;">Если есть доп. артикул:</div>
+                    <div>https://app.5lb.pro/images/catalog/<span style="color:var(--orange)">articleMain</span>-<span
+                            style="color:var(--blue)">articleAdditional</span>.png</div>
+                    <div style="color:var(--text-muted);font-size:12px;margin:12px 0 8px;">Если доп. артикул пустой:
+                    </div>
+                    <div>https://app.5lb.pro/images/catalog/<span style="color:var(--orange)">articleMain</span>.png
+                    </div>
+                </div>
+
+                <h3>Пример</h3>
+                <div class="code-block">
+                    <div class="code-block-header"><span class="code-lang">URL</span></div>
+                    <pre>https://app.5lb.pro/images/catalog/1010002-CLYLW-VOL700.png</pre>
+                </div>
+
+                <div class="alert alert-info">
+                    <span class="alert-icon">ℹ️</span>
+                    <div>В ответе API поле <code>imageUrl</code> всегда содержит полный URL изображения или
+                        <code>null</code>, если фото не загружено.</div>
+                </div>
+            </section>
+
+            <!-- ERRORS -->
+            <section id="errors">
+                <h2>⛔ Коды ошибок</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Код</th>
+                            <th>Статус</th>
+                            <th>Причина</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="status-code s200" style="padding:10px 14px">200</td>
+                            <td>OK</td>
+                            <td>Запрос выполнен успешно</td>
+                        </tr>
+                        <tr>
+                            <td class="status-code s400" style="padding:10px 14px">400</td>
+                            <td>Bad Request</td>
+                            <td>Отсутствует обязательное поле или некорректные данные</td>
+                        </tr>
+                        <tr>
+                            <td class="status-code s401" style="padding:10px 14px">401</td>
+                            <td>Unauthorized</td>
+                            <td>Токен не передан, неверный или истёк</td>
+                        </tr>
+                        <tr>
+                            <td class="status-code s500" style="padding:10px 14px">500</td>
+                            <td>Server Error</td>
+                            <td>Внутренняя ошибка на стороне сервера</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Формат ошибки</h3>
+                <div class="code-block">
+                    <div class="code-block-header"><span class="code-lang">JSON</span></div>
+                    <pre>{
+  <span class="hl-key">"ok"</span>: <span class="hl-null">false</span>,
+  <span class="hl-key">"error"</span>: <span class="hl-str">"Описание ошибки"</span>
+}</pre>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+            <p style="text-align:center;color:var(--text-dim);font-size:13px;padding-bottom:40px;">
+                5lb.pro API Documentation · <a href="https://app.5lb.pro">app.5lb.pro</a>
+            </p>
+
+        </main>
+    </div>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = 'Скопировано!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Копировать';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        // Highlight active nav item on scroll
+        const sections = document.querySelectorAll('section[id], div[id]');
+        const navItems = document.querySelectorAll('.nav-item');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 80) current = s.id;
+            });
+            navItems.forEach(a => {
+                a.style.color = a.getAttribute('href') === '#' + current ? 'var(--orange)' : '';
+                a.style.borderLeftColor = a.getAttribute('href') === '#' + current ? 'var(--orange)' : '';
+                a.style.background = a.getAttribute('href') === '#' + current ? 'var(--orange-glow)' : '';
+            });
+        });
+    </script>
+</body>
+
+</html>
